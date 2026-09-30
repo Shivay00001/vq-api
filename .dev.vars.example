@@ -1,0 +1,8 @@
+# LOCAL DEV ONLY — non-sensitive test values. Never commit real secrets.
+# Copy to .dev.vars (git-ignored). Prod uses `wrangler secret put`.
+LOCAL_DEV=1
+ADMIN_SECRET=dev-admin-secret-change-me
+STRIPE_WEBHOOK_SECRET=whsec_test_dev_only
+RAZORPAY_WEBHOOK_SECRET=rzp_test_dev_only
+CORS_ORIGINS=https://visionquantech.com,http://localhost:8787
+API_KILL_SWITCH=0
