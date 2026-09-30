@@ -1,0 +1,28 @@
+name = "vq-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Local dev: `npx wrangler dev --local` (miniflare). KV/R2/Queue are
+# auto-provisioned locally. For production deploy, create real resources
+# and replace the placeholder ids below (see TRD.md §9).
+
+[[kv_namespaces]]
+binding = "KV"
+id = "00000000000000000000000000000000"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "vq-api-jobs"
+
+[[queues.producers]]
+binding = "QUEUE"
+queue = "vq-media-jobs"
+
+[[queues.consumers]]
+queue = "vq-media-jobs"
+max_batch_size = 5
+max_retries = 2
+
+[vars]
+LOCAL_DEV = "1"
+CORS_ORIGINS = "https://visionquantech.com,http://localhost:8787"

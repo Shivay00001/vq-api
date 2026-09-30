@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionQuantech API Docs — api.visionquantech.com</title>
+<meta name="description" content="One API for Indian finance calculators, text/dev tools, and image/PDF processing. Free 1,000 calls/month.">
+<style>
+:root{--bg:#0b1020;--card:#141b33;--line:#263055;--ink:#e8ecf8;--mut:#9aa6c7;--acc:#5aa2ff;--ok:#3ddc84}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:2rem 1.2rem}
+h1{font-size:2rem;margin:.2em 0}h2{margin-top:2.2em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.2rem;margin:1rem 0}
+code,kbd{background:#0a0e1d;border:1px solid var(--line);border-radius:6px;padding:.1em .4em;font-size:.9em}
+pre{background:#0a0e1d;border:1px solid var(--line);border-radius:10px;padding:1rem;overflow:auto;font-size:.85em}
+pre code{border:0;background:none;padding:0}
+.mut{color:var(--mut)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.tier b{color:var(--acc)}.ok{color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:.9em}th,td{text-align:left;padding:.5em;border-bottom:1px solid var(--line)}
+a{color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>VisionQuantech API</h1>
+<p class="mut"><code>https://api.visionquantech.com</code> · One key for finance calculators, dev tools, image &amp; PDF processing.</p>
+
+<div class="card">
+<h2 style="margin-top:0;border:0">Quickstart</h2>
+<pre><code># 1. Health (no key needed)
+curl https://api.visionquantech.com/health
+
+# 2. Get a key from your VisionQuantech dashboard, then:
+curl -X POST https://api.visionquantech.com/v1/calc/gst-interest \
+  -H "Authorization: Bearer vq_live_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"delayed","amount":100000,"due_date":"2026-08-20","pay_date":"2026-09-19"}'
+
+# → {"tool":"gst-interest","rate_pct":18,"days_delayed":30,
+#    "interest":1479.45,"late_fee":1500,"total":2979.45,...}</code></pre>
+</div>
+
+<h2>Pricing</h2>
+<div class="grid">
+<div class="card tier"><b>Free</b><br><span class="ok">$0</span><br>1,000 calls/mo · 10 req/min<br>1 MB images · 5 MB PDFs</div>
+<div class="card tier"><b>Pro</b><br><span class="ok">$19/mo</span><br>25,000 calls/mo · 60 req/min<br>5 MB images · 25 MB PDFs</div>
+<div class="card tier"><b>Business</b><br><span class="ok">$99/mo</span><br>250,000 calls/mo · 300 req/min<br>20 MB images · 100 MB PDFs</div>
+<div class="card tier"><b>Enterprise</b><br><span class="ok">Custom</span><br>Custom quotas · SLA · support</div>
+</div>
+
+<h2>Auth</h2>
+<p>Send the key in the <code>Authorization: Bearer</code> header <b>only</b> — keys in URLs are rejected. Test keys start with <code>vq_test_</code>.</p>
+
+<h2>Endpoints</h2>
+<table>
+<tr><th>Method</th><th>Path</th><th>What</th></tr>
+<tr><td>GET</td><td><code>/health</code></td><td>Health (public)</td></tr>
+<tr><td>GET</td><td><code>/v1/status</code></td><td>Your tier + quota usage</td></tr>
+<tr><td>GET</td><td><code>/v1/openapi.json</code></td><td>Full OpenAPI 3.1 spec (public)</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/gst-interest</code></td><td>GST interest + late fee (Sec 50/47)</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/emi</code></td><td>EMI + amortization schedule</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/gratuity</code></td><td>Gratuity (15/26, ₹20L cap)</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/salary</code></td><td>Salary: PF/ESI/PT/income-tax FY25-26</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/pf</code> · <code>/esi</code></td><td>PF / ESI contribution checks</td></tr>
+<tr><td>POST</td><td><code>/v1/calc/break-even</code> · <code>/pricing</code> · <code>/discount</code> · <code>/overtime</code> · <code>/retention</code> · <code>/working-capital</code> · <code>/cash-survival</code></td><td>Business math</td></tr>
+<tr><td>POST</td><td><code>/v1/tools/word-count</code> · <code>/json-format</code> · <code>/password</code> · <code>/qr</code></td><td>Text utilities</td></tr>
+<tr><td>POST</td><td><code>/v1/tools/cron-explain</code> · <code>/dockerfile</code> · <code>/k8s</code> · <code>/ci</code></td><td>DevOps generators</td></tr>
+<tr><td>POST</td><td><code>/v1/tools/image/resize</code> · <code>/convert</code></td><td>Images (multipart; big files → async job)</td></tr>
+<tr><td>POST</td><td><code>/v1/tools/pdf/merge</code> · <code>/split</code> · <code>/compress</code></td><td>PDFs (multipart)</td></tr>
+<tr><td>POST</td><td><code>/v1/jobs</code></td><td>Async job submit → <code>GET /v1/jobs/{id}</code> → <code>/result</code></td></tr>
+</table>
+
+<h2>Idempotency</h2>
+<p>POSTs accept <code>Idempotency-Key</code> (8–128 chars). Same key + same body within 24h replays the stored response — safe retries, no double billing.</p>
+
+<h2>Errors</h2>
+<p>Every error is <code>{"error":{"code":"…","message":"…","request_id":"…"} }</code>. Codes: <code>invalid_param</code> (400), <code>missing_auth</code>/<code>invalid_key</code> (401), <code>quota_exceeded</code> (402), <code>revoked_key</code>/<code>forbidden</code> (403), <code>idempotency_conflict</code> (409), <code>file_too_large</code> (413), <code>rate_limited</code> (429 + <code>Retry-After</code>).</p>
+
+<h2>SDKs</h2>
+<pre><code># Python
+import requests
+h = {"Authorization": "Bearer vq_live_YOUR_KEY"}
+r = requests.post("https://api.visionquantech.com/v1/calc/emi", json={
+  "principal": 5000000, "annual_rate_pct": 8.5, "months": 240}, headers=h)
+print(r.json()["emi"])
+
+// JavaScript
+const r = await fetch("https://api.visionquantech.com/v1/calc/emi", {
+  method: "POST",
+  headers: { "Authorization": "Bearer vq_live_YOUR_KEY", "Content-Type": "application/json" },
+  body: JSON.stringify({ principal: 5000000, annual_rate_pct: 8.5, months: 240 })
+});
+console.log((await r.json()).emi);</code></pre>
+
+<p class="mut">Full spec: <a href="/v1/openapi.json">openapi.json</a> · Postman collection in the repo · Status: building toward launch.</p>
+</div>
+</body>
+</html>

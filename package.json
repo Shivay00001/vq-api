@@ -1,0 +1,21 @@
+{
+  "name": "vq-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VisionQuantech unified API platform (api.visionquantech.com)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "test": "node tests/run.mjs"
+  },
+  "dependencies": {
+    "jpeg-js": "^0.4.4",
+    "pdf-lib": "^1.17.1",
+    "qrcode-generator": "^1.4.4",
+    "upng-js": "^2.1.0"
+  },
+  "devDependencies": {
+    "imagescript": "^1.2.1",
+    "wrangler": "^3.100.0"
+  }
+}

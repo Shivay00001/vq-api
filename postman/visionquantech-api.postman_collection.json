@@ -1,0 +1,1305 @@
+{
+  "info": {
+    "name": "VisionQuantech API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Generated from openapi.json. Set vq_api_key + base_url variables."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.visionquantech.com"
+    },
+    {
+      "key": "vq_api_key",
+      "value": "vq_test_YOUR_KEY"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET /health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/status",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/openapi.json",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/openapi.json",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "openapi.json"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/gst-interest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/gst-interest",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "gst-interest"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"delayed\",\n  \"amount\": 100000,\n  \"due_date\": \"2026-08-20\",\n  \"pay_date\": \"2026-09-19\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/emi",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/emi",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "emi"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"principal\": 5000000,\n  \"annual_rate_pct\": 8.5,\n  \"months\": 240\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/gratuity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/gratuity",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "gratuity"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monthly_salary\": 30000,\n  \"years\": 5\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/salary",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/salary",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "salary"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ctc_annual\": 1200000,\n  \"state\": \"MH\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/pf",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/pf",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "pf"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monthly_wage\": 30000\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/esi",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/esi",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "esi"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monthly_wage\": 18000\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/break-even",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/break-even",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "break-even"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fixed_cost\": 500000,\n  \"price_per_unit\": 500,\n  \"variable_cost_per_unit\": 300\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/pricing",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/pricing",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "pricing"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"unit_cost\": 100,\n  \"margin_pct\": 40\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/discount",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/discount",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "discount"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price\": 500,\n  \"discount_pct\": 10,\n  \"units\": 1000,\n  \"cost_per_unit\": 300\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/overtime",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/overtime",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "overtime"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monthly_salary\": 30000,\n  \"ot_hours\": 20\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/retention",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/retention",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "retention"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contract_value\": 1000000,\n  \"retention_pct\": 10\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/working-capital",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/working-capital",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "working-capital"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"current_assets\": 2000000,\n  \"current_liabilities\": 800000\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/calc/cash-survival",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/calc/cash-survival",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "calc",
+            "cash-survival"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cash_in_hand\": 5000000,\n  \"monthly_burn\": 1000000\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/word-count",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/word-count",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "word-count"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Hello world, this is a test.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/json-format",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/json-format",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "json-format"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"json\": \"{\\\"a\\\":1,\\\"b\\\":[2,3]}\",\n  \"style\": \"pretty\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/password",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "password"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"length\": 16,\n  \"count\": 3\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/qr",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/qr",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "qr"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"https://visionquantech.com\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/cron-explain",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/cron-explain",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "cron-explain"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expr\": \"*/15 9-17 * * MON-FRI\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/dockerfile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/dockerfile",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "dockerfile"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"base\": \"node:20-alpine\",\n  \"port\": 3000,\n  \"cmd\": [\n    \"node\",\n    \"app.js\"\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/k8s",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/k8s",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "k8s"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"deployment\",\n  \"name\": \"web\",\n  \"image\": \"myapp:1.0\",\n  \"replicas\": 2\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/ci",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/ci",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "ci"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"provider\": \"gha\",\n  \"node_version\": \"20\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/image/resize",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/image/resize",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "image",
+            "resize"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/image/convert",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/image/convert",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "image",
+            "convert"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/pdf/merge",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/pdf/merge",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "pdf",
+            "merge"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/pdf/split",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/pdf/split",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "pdf",
+            "split"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/tools/pdf/compress",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/tools/pdf/compress",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "tools",
+            "pdf",
+            "compress"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/jobs",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/jobs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "jobs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/jobs/{id}",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/jobs/{id}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "jobs",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/jobs/{id}/result",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/jobs/{id}/result",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "jobs",
+            "{id}",
+            "result"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/admin/keys",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/admin/keys",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/admin/keys/{id}/revoke",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys/{id}/revoke",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys",
+            "{id}",
+            "revoke"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/admin/keys/{id}/rotate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys/{id}/rotate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys",
+            "{id}",
+            "rotate"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/admin/keys/{id}/usage",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys/{id}/usage",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys",
+            "{id}",
+            "usage"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/billing/checkout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/billing/checkout",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "billing",
+            "checkout"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /v1/admin/keys/{id}/audit",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/admin/keys/{id}/audit",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "admin",
+            "keys",
+            "{id}",
+            "audit"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/billing/webhook/stripe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/billing/webhook/stripe",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "billing",
+            "webhook",
+            "stripe"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/billing/webhook/razorpay",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/billing/webhook/razorpay",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "billing",
+            "webhook",
+            "razorpay"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /v1/billing/webhook/simulate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{vq_api_key}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/billing/webhook/simulate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "billing",
+            "webhook",
+            "simulate"
+          ]
+        }
+      }
+    }
+  ]
+}

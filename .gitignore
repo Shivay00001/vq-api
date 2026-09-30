@@ -1,0 +1,6 @@
+# secrets + wrangler local state — never commit
+.dev.vars
+.wrangler/
+node_modules/
+npm-debug.log*
+dist/

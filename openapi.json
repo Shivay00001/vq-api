@@ -1,0 +1,1441 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "VisionQuantech API",
+  "version": "1.0.0",
+  "description": "Unified API for VisionQuantech products: Indian finance calculators (GST, EMI, salary, PF/ESI, gratuity), text/dev tools, image & PDF processing. Base URL: https://api.visionquantech.com",
+  "contact": {
+   "name": "VisionQuantech",
+   "url": "https://visionquantech.com"
+  }
+ },
+ "servers": [
+  {
+   "url": "https://api.visionquantech.com",
+   "description": "Production"
+  }
+ ],
+ "security": [
+  {
+   "bearerAuth": []
+  }
+ ],
+ "components": {
+  "securitySchemes": {
+   "bearerAuth": {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "vq_live_\u2026",
+    "description": "API key in the Authorization header ONLY. Never in URLs."
+   }
+  },
+  "schemas": {
+   "Error": {
+    "type": "object",
+    "required": [
+     "error"
+    ],
+    "properties": {
+     "error": {
+      "type": "object",
+      "required": [
+       "code",
+       "message"
+      ],
+      "properties": {
+       "code": {
+        "type": "string",
+        "example": "rate_limited"
+       },
+       "message": {
+        "type": "string"
+       },
+       "request_id": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   },
+   "GstInterestReq": {
+    "type": "object",
+    "required": [
+     "type",
+     "amount",
+     "due_date",
+     "pay_date"
+    ],
+    "properties": {
+     "type": {
+      "type": "string",
+      "enum": [
+       "delayed",
+       "itc-wrong",
+       "itc-reversal"
+      ]
+     },
+     "amount": {
+      "type": "number",
+      "example": 100000
+     },
+     "due_date": {
+      "type": "string",
+      "format": "date",
+      "example": "2026-08-20"
+     },
+     "pay_date": {
+      "type": "string",
+      "format": "date",
+      "example": "2026-09-19"
+     },
+     "is_nil_return": {
+      "type": "boolean",
+      "default": false
+     },
+     "turnover": {
+      "type": "number",
+      "description": "Annual turnover (\u20b9) for late-fee cap"
+     }
+    }
+   },
+   "EmiReq": {
+    "type": "object",
+    "required": [
+     "principal",
+     "annual_rate_pct",
+     "months"
+    ],
+    "properties": {
+     "principal": {
+      "type": "number",
+      "example": 5000000
+     },
+     "annual_rate_pct": {
+      "type": "number",
+      "example": 8.5
+     },
+     "months": {
+      "type": "integer",
+      "example": 240
+     },
+     "prepayments": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "month": {
+         "type": "integer"
+        },
+        "amount": {
+         "type": "number"
+        }
+       }
+      }
+     },
+     "mode": {
+      "type": "string",
+      "enum": [
+       "tenure",
+       "emi"
+      ],
+      "default": "tenure"
+     },
+     "schedule": {
+      "type": "boolean",
+      "default": false
+     }
+    }
+   },
+   "GratuityReq": {
+    "type": "object",
+    "required": [
+     "monthly_salary",
+     "years"
+    ],
+    "properties": {
+     "monthly_salary": {
+      "type": "number",
+      "description": "Basic + DA"
+     },
+     "years": {
+      "type": "integer"
+     },
+     "extra_months": {
+      "type": "integer",
+      "default": 0
+     },
+     "covered": {
+      "type": "boolean",
+      "default": true
+     },
+     "special_case": {
+      "type": "boolean",
+      "default": false
+     }
+    }
+   },
+   "SalaryReq": {
+    "type": "object",
+    "required": [
+     "ctc_annual"
+    ],
+    "properties": {
+     "ctc_annual": {
+      "type": "number",
+      "example": 1200000
+     },
+     "basic_pct": {
+      "type": "number",
+      "default": 50
+     },
+     "state": {
+      "type": "string",
+      "enum": [
+       "MH",
+       "KA",
+       "WB",
+       "TN",
+       "GJ",
+       "AP",
+       "TG",
+       "KL",
+       "DL",
+       "OTHER"
+      ],
+      "default": "OTHER"
+     },
+     "regime": {
+      "type": "string",
+      "enum": [
+       "new",
+       "old"
+      ],
+      "default": "new"
+     }
+    }
+   },
+   "Job": {
+    "type": "object",
+    "properties": {
+     "job_id": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "queued",
+       "processing",
+       "done",
+       "failed"
+      ]
+     },
+     "operation": {
+      "type": "string"
+     },
+     "poll_url": {
+      "type": "string"
+     },
+     "result_url": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "parameters": {
+   "IdempotencyKey": {
+    "name": "Idempotency-Key",
+    "in": "header",
+    "schema": {
+     "type": "string"
+    },
+    "description": "8\u2013128 chars. Same key + same body replays the stored response (24h)."
+   }
+  }
+ },
+ "paths": {
+  "/health": {
+   "get": {
+    "security": [],
+    "summary": "Health check",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/status": {
+   "get": {
+    "summary": "Key status + quota usage",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/openapi.json": {
+   "get": {
+    "security": [],
+    "summary": "This spec",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/gst-interest": {
+   "post": {
+    "summary": "GST interest + late fee (Sec 50/47)",
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/IdempotencyKey"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GstInterestReq"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Calculation result"
+     },
+     "400": {
+      "description": "Bad input"
+     }
+    }
+   }
+  },
+  "/v1/calc/emi": {
+   "post": {
+    "summary": "EMI + amortization (reducing balance)",
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/IdempotencyKey"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EmiReq"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/gratuity": {
+   "post": {
+    "summary": "Gratuity (15/26 formula, \u20b920L cap)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GratuityReq"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/salary": {
+   "post": {
+    "summary": "Salary breakdown: PF/ESI/PT/income tax FY25-26",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SalaryReq"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/pf": {
+   "post": {
+    "summary": "PF contribution check (\u20b925k ceiling)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "monthly_wage": {
+          "type": "number"
+         },
+         "as_of_date": {
+          "type": "string",
+          "format": "date"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/esi": {
+   "post": {
+    "summary": "ESI coverage check (\u20b921k ceiling)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "monthly_wage": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/break-even": {
+   "post": {
+    "summary": "Break-even units + revenue",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "fixed_cost": {
+          "type": "number"
+         },
+         "price_per_unit": {
+          "type": "number"
+         },
+         "variable_cost_per_unit": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/pricing": {
+   "post": {
+    "summary": "Margin \u2194 markup pricing",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "unit_cost": {
+          "type": "number"
+         },
+         "margin_pct": {
+          "type": "number"
+         },
+         "markup_pct": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/discount": {
+   "post": {
+    "summary": "Discount profit impact",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "price": {
+          "type": "number"
+         },
+         "discount_pct": {
+          "type": "number"
+         },
+         "units": {
+          "type": "number"
+         },
+         "cost_per_unit": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/overtime": {
+   "post": {
+    "summary": "Overtime pay (salary/208 hourly)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "monthly_salary": {
+          "type": "number"
+         },
+         "ot_hours": {
+          "type": "number"
+         },
+         "ot_multiplier": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/retention": {
+   "post": {
+    "summary": "Retention money held/released",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "contract_value": {
+          "type": "number"
+         },
+         "retention_pct": {
+          "type": "number"
+         },
+         "released": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/working-capital": {
+   "post": {
+    "summary": "Working capital + current ratio + CCC",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "current_assets": {
+          "type": "number"
+         },
+         "current_liabilities": {
+          "type": "number"
+         },
+         "inventory_days": {
+          "type": "number"
+         },
+         "receivable_days": {
+          "type": "number"
+         },
+         "payable_days": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/calc/cash-survival": {
+   "post": {
+    "summary": "Cash runway days",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "cash_in_hand": {
+          "type": "number"
+         },
+         "monthly_burn": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/word-count": {
+   "post": {
+    "summary": "Word/char/sentence count",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "text": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/json-format": {
+   "post": {
+    "summary": "Validate + pretty/minify JSON",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "json": {
+          "type": "string"
+         },
+         "style": {
+          "type": "string",
+          "enum": [
+           "pretty",
+           "mini",
+           "validate"
+          ]
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/password": {
+   "post": {
+    "summary": "Crypto password generator + entropy",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "length": {
+          "type": "integer"
+         },
+         "numbers": {
+          "type": "boolean"
+         },
+         "symbols": {
+          "type": "boolean"
+         },
+         "count": {
+          "type": "integer"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/qr": {
+   "post": {
+    "summary": "QR code as SVG",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "data": {
+          "type": "string"
+         },
+         "size": {
+          "type": "integer"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/cron-explain": {
+   "post": {
+    "summary": "Human description of a cron expression",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "expr": {
+          "type": "string",
+          "example": "*/15 9-17 * * MON-FRI"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/dockerfile": {
+   "post": {
+    "summary": "Generate a Dockerfile",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "base": {
+          "type": "string"
+         },
+         "port": {
+          "type": "integer"
+         },
+         "cmd": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/k8s": {
+   "post": {
+    "summary": "Generate K8s Deployment/Service YAML",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "enum": [
+           "deployment",
+           "service"
+          ]
+         },
+         "name": {
+          "type": "string"
+         },
+         "image": {
+          "type": "string"
+         },
+         "replicas": {
+          "type": "integer"
+         },
+         "port": {
+          "type": "integer"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/ci": {
+   "post": {
+    "summary": "Generate CI pipeline (GitHub Actions/Jenkins)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "provider": {
+          "type": "string",
+          "enum": [
+           "gha",
+           "jenkins"
+          ]
+         },
+         "node_version": {
+          "type": "string"
+         },
+         "steps": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/tools/image/resize": {
+   "post": {
+    "summary": "Resize image (multipart file; >budget \u2192 202 job). v1: jpeg/png only",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         },
+         "width": {
+          "type": "integer"
+         },
+         "height": {
+          "type": "integer"
+         },
+         "format": {
+          "type": "string",
+          "enum": [
+           "jpeg",
+           "png"
+          ]
+         },
+         "quality": {
+          "type": "integer"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Image file"
+     },
+     "202": {
+      "description": "Async job created"
+     }
+    }
+   }
+  },
+  "/v1/tools/image/convert": {
+   "post": {
+    "summary": "Convert image format jpeg\u2194png (multipart file)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         },
+         "format": {
+          "type": "string",
+          "enum": [
+           "jpeg",
+           "png"
+          ]
+         },
+         "quality": {
+          "type": "integer"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Image file"
+     },
+     "202": {
+      "description": "Async job"
+     }
+    }
+   }
+  },
+  "/v1/tools/pdf/merge": {
+   "post": {
+    "summary": "Merge PDFs (multipart files[])",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "files": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "format": "binary"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "PDF file"
+     },
+     "202": {
+      "description": "Async job"
+     }
+    }
+   }
+  },
+  "/v1/tools/pdf/split": {
+   "post": {
+    "summary": "Split PDF by ranges like 1-3,5 (multipart file)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         },
+         "ranges": {
+          "type": "string",
+          "example": "1-3,5"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "PDF file"
+     },
+     "202": {
+      "description": "Async job"
+     }
+    }
+   }
+  },
+  "/v1/tools/pdf/compress": {
+   "post": {
+    "summary": "Lossless PDF rebuild (multipart file)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "PDF file"
+     },
+     "202": {
+      "description": "Async job"
+     }
+    }
+   }
+  },
+  "/v1/jobs": {
+   "post": {
+    "summary": "Submit async media job (multipart file + operation)",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         },
+         "operation": {
+          "type": "string",
+          "enum": [
+           "image.resize",
+           "image.convert",
+           "pdf.merge",
+           "pdf.split",
+           "pdf.compress"
+          ]
+         },
+         "params": {
+          "type": "string",
+          "description": "JSON string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Done inline (local dev)"
+     },
+     "202": {
+      "description": "Queued",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Job"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/jobs/{id}": {
+   "get": {
+    "summary": "Job status (owner only)",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "404": {
+      "description": "Not found"
+     }
+    }
+   }
+  },
+  "/v1/jobs/{id}/result": {
+   "get": {
+    "summary": "Download job result (owner only)",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "File"
+     },
+     "404": {
+      "description": "Not found"
+     },
+     "409": {
+      "description": "Not done yet"
+     }
+    }
+   }
+  },
+  "/v1/admin/keys": {
+   "post": {
+    "summary": "Issue API key (admin secret)",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "tier": {
+          "type": "string",
+          "enum": [
+           "free",
+           "pro",
+           "business",
+           "enterprise"
+          ]
+         },
+         "test_mode": {
+          "type": "boolean"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Key issued (raw shown once)"
+     }
+    }
+   },
+   "get": {
+    "summary": "List keys (metadata only)",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/admin/keys/{id}/revoke": {
+   "post": {
+    "summary": "Revoke key",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/admin/keys/{id}/rotate": {
+   "post": {
+    "summary": "Rotate key (old revoked, new issued)",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "201": {
+      "description": "New key (raw shown once)"
+     }
+    }
+   }
+  },
+  "/v1/admin/keys/{id}/usage": {
+   "get": {
+    "summary": "Monthly usage",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/v1/billing/checkout": {
+   "post": {
+    "summary": "Create TEST-MODE checkout session",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "tier": {
+          "type": "string",
+          "enum": [
+           "pro",
+           "business"
+          ]
+         },
+         "provider": {
+          "type": "string",
+          "enum": [
+           "stripe",
+           "razorpay"
+          ]
+         },
+         "success_url": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Checkout created (no charge)"
+     }
+    }
+   }
+  },
+  "/v1/admin/keys/{id}/audit": {
+   "get": {
+    "summary": "Key audit trail (admin secret)",
+    "parameters": [
+     {
+      "name": "X-Admin-Secret",
+      "in": "header",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Audit events for the key"
+     }
+    }
+   }
+  },
+  "/v1/billing/webhook/stripe": {
+   "post": {
+    "summary": "Stripe webhook (signature verified, replay-protected)",
+    "responses": {
+     "200": {
+      "description": "Webhook received"
+     }
+    }
+   }
+  },
+  "/v1/billing/webhook/razorpay": {
+   "post": {
+    "summary": "Razorpay webhook (signature verified, replay-protected)",
+    "responses": {
+     "200": {
+      "description": "Webhook received"
+     }
+    }
+   }
+  },
+  "/v1/billing/webhook/simulate": {
+   "post": {
+    "summary": "Test-mode webhook simulator {checkout_session}",
+    "responses": {
+     "200": {
+      "description": "Webhook received"
+     }
+    }
+   }
+  }
+ }
+}
